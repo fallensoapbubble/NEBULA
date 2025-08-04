@@ -2,16 +2,20 @@
   "name": "nebula",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "setup-github": "node scripts/setup-github-oauth.js",
+    "validate-github-config": "node scripts/validate-github-config.js"
   },
   "dependencies": {
     "@octokit/rest": "^20.1.2",
+    "dotenv": "^17.2.1",
     "framer-motion": "^12.23.12",
     "next": "15.4.5",
     "next-auth": "^4.24.5",

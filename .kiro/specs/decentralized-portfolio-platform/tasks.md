@@ -64,15 +64,21 @@
     - Build graceful degradation for API failures
     - _Requirements: 9.1, 9.2, 9.3, 11.3_
 
-- [-] 4. REST API Endpoints for GitHub Integration
+- [ ] 4. REST API Endpoints for GitHub Integration
+
+
+
+
 
   - [x] 4.1 Create repository management API routes
+
 
     - Implement `src/app/api/repositories/fork/route.js` for forking templates
     - Create `src/app/api/repositories/[owner]/[repo]/route.js` for repository info
     - Build `src/app/api/repositories/[owner]/[repo]/structure/route.js` for file tree
     - Add `src/app/api/repositories/[owner]/[repo]/status/route.js` for sync status
     - _Requirements: 3.1, 3.2, 4.1_
+
 
   - [x] 4.2 Build content management API routes
 
@@ -82,12 +88,14 @@
     - Add `GET /api/content/[owner]/[repo]/history` for commit history
     - _Requirements: 5.1, 5.3, 5.4, 10.1_
 
+
   - [x] 4.3 Create template and validation API routes
 
     - Implement `GET /api/templates` for template gallery data
     - Create `GET /api/templates/[owner]/[repo]/validate` for template validation
     - Build `POST /api/templates/[owner]/[repo]/analyze` for structure analysis
     - Add `GET /api/templates/[owner]/[repo]/schema` for editing schema
+
     - _Requirements: 2.1, 4.2, 4.3, 8.1, 8.2_
 
   - [x] 4.4 Build synchronization and conflict API routes
@@ -95,6 +103,7 @@
     - Create `GET /api/sync/[owner]/[repo]/check` for conflict detection
     - Implement `POST /api/sync/[owner]/[repo]/resolve` for conflict resolution
     - Build `GET /api/sync/[owner]/[repo]/diff` for change comparison
+
     - Add `POST /api/sync/[owner]/[repo]/pull` for remote updates
     - _Requirements: 10.2, 10.3, 10.4, 10.5, 10.6_
 
