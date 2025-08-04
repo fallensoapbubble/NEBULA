@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { RepositoryService } from '../../../../../../lib/repository-service.js';
+import { RepositoryService } from '../../../../../../../lib/repository-service.js';
 import { validateAuthToken } from '../../../../../../../lib/auth.js';
 
 /**

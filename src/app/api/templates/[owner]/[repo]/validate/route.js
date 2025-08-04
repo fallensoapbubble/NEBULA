@@ -5,9 +5,9 @@
  */
 
 import { NextResponse } from 'next/server';
-import { RepositoryService } from '../../../../../../lib/repository-service.js';
-import { TemplateCompatibilityValidationSystem } from '../../../../../../lib/template-compatibility-validator.js';
-import { parseGitHubError } from '../../../../../../lib/github-errors.js';
+import { RepositoryService } from '../../../../../../../lib/repository-service.js';
+import { TemplateCompatibilityValidationSystem } from '../../../../../../../lib/template-compatibility-validator.js';
+import { parseGitHubError } from '../../../../../../../lib/github-errors.js';
 
 /**
  * GET /api/templates/[owner]/[repo]/validate

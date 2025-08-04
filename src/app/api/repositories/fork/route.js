@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { RepositoryService } from '../../../../lib/repository-service.js';
-import { validateAuthToken } from '../../../../lib/auth.js';
+import { RepositoryService } from '../../../../../lib/repository-service.js';
+import { validateAuthToken } from '../../../../../lib/auth.js';
 
 /**
  * Fork a template repository to the authenticated user's account

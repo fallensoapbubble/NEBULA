@@ -72,7 +72,7 @@ export default function AuthDemoPage() {
                   Protected Section
                 </h2>
                 <p className="text-gray-300 mb-4">
-                  This section is only visible to authenticated users with 'public_repo' permissions.
+                  This section is only visible to authenticated users with &apos;public_repo&apos; permissions.
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -104,7 +104,7 @@ export default function AuthDemoPage() {
                   Advanced Protected Section
                 </h2>
                 <p className="text-gray-300 mb-4">
-                  This section requires 'repo' permissions (access to private repositories).
+                  This section requires &apos;repo&apos; permissions (access to private repositories).
                 </p>
                 
                 <div className="bg-indigo-500/20 border border-indigo-500/30 rounded-lg p-4">

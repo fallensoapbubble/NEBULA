@@ -210,7 +210,7 @@ export default function Home() {
                   Ready to Build Your Portfolio?
                 </GlassCardTitle>
                 <GlassCardDescription className="text-xl mb-8 text-white/80 text-contrast">
-                  Join developers who've taken control of their online presence. 
+                  Join developers who&apos;ve taken control of their online presence. 
                   Start building your professional portfolio today.
                 </GlassCardDescription>
               </GlassCardHeader>
