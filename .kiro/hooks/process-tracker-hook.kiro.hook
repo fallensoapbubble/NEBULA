@@ -1,0 +1,26 @@
+{
+  "enabled": true,
+  "name": "Process Tracker",
+  "description": "Automatically updates Process.md with all file changes and development activities to maintain a complete project journey log",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/**/*",
+      "*.js",
+      "*.jsx",
+      "*.ts",
+      "*.tsx",
+      "*.json",
+      "*.md",
+      "*.mjs",
+      "*.config.*",
+      "package.json",
+      "README.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file has been modified in the project. Please update Process.md to document this change as part of the development journey. Include what was changed, when it was changed, and the context/reason for the change. Maintain a chronological log of all project activities and decisions."
+  }
+}

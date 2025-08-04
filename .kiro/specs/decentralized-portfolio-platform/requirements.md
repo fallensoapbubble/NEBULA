@@ -65,26 +65,30 @@ This document outlines the requirements for a decentralized portfolio platform t
 
 ### Requirement 6: Live Portfolio Hosting
 
-**User Story:** As a user, I want my portfolio to be automatically hosted at a personalized URL so that I can share it with others immediately.
+**User Story:** As a user, I want my portfolio to be automatically hosted at a decentralized URL that directly maps to my GitHub repository so that I can share it with others immediately.
 
 #### Acceptance Criteria
 
-1. WHEN a user's portfolio is updated THEN the system SHALL serve the latest content at their personalized URL
-2. WHEN someone visits [username].platform.com THEN the system SHALL render the user's portfolio dynamically
-3. WHEN content is fetched THEN the system SHALL retrieve files from the user's GitHub repository
-4. IF repository is unavailable THEN the system SHALL display an appropriate error page
+1. WHEN a user's portfolio is updated THEN the system SHALL serve the latest content at nebula-mu-henna.vercel.app/[githubusername]/[reponame]
+2. WHEN someone visits nebula-mu-henna.vercel.app/[githubusername]/[reponame] THEN the system SHALL render the portfolio dynamically from the specified GitHub repository
+3. WHEN content is fetched THEN the system SHALL retrieve files directly from the user's GitHub repository using the URL parameters
+4. WHEN the repository structure is valid THEN the system SHALL render the portfolio using the appropriate template
+5. IF the GitHub repository is unavailable or private THEN the system SHALL display an appropriate error page
+6. IF the repository doesn't contain a valid portfolio structure THEN the system SHALL display a helpful error message
 
-### Requirement 7: Username Mapping and URL Management
+### Requirement 7: Decentralized URL Resolution
 
-**User Story:** As a user, I want to choose a friendly username for my portfolio URL so that I can have a memorable web address.
+**User Story:** As a user, I want my portfolio to be accessible through a direct GitHub repository mapping so that the URL structure is transparent and fully decentralized.
 
 #### Acceptance Criteria
 
-1. WHEN a user sets up their portfolio THEN the system SHALL allow them to choose a friendly username
-2. WHEN a username is chosen THEN the system SHALL verify it's available and valid
-3. WHEN username is set THEN the system SHALL map it to the user's GitHub account and repository
-4. WHEN someone visits the URL THEN the system SHALL resolve the username to the correct repository
-5. IF username conflicts exist THEN the system SHALL suggest alternatives
+1. WHEN someone accesses nebula-mu-henna.vercel.app/[githubusername]/[reponame] THEN the system SHALL validate the GitHub username and repository name
+2. WHEN the URL parameters are valid THEN the system SHALL fetch content directly from the specified GitHub repository
+3. WHEN the repository exists and is public THEN the system SHALL render the portfolio content
+4. WHEN the repository contains multiple portfolio templates THEN the system SHALL use the default or specified template
+5. IF the GitHub username doesn't exist THEN the system SHALL display a "user not found" error
+6. IF the repository doesn't exist THEN the system SHALL display a "repository not found" error
+7. IF the repository is private THEN the system SHALL display an appropriate access error
 
 ### Requirement 8: Template Compatibility and Standards
 
