@@ -4,7 +4,7 @@ import {
   getOAuthSetupInstructions, 
   getOAuthConfigSummary,
   testOAuthConfig 
-} from '../../../../../lib/oauth-config.js';
+} from '@/lib/oauth-config.js';
 
 /**
  * OAuth Configuration Status Endpoint

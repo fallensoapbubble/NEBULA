@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { useAuth } from '../../lib/auth-context.js';
 
 /**
@@ -108,7 +109,7 @@ export default function UserMenu({ className = '' }) {
               View GitHub Profile
             </a>
             
-            <a
+            <Link
               href="/dashboard"
               className="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
             >
@@ -116,9 +117,9 @@ export default function UserMenu({ className = '' }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
               </svg>
               Dashboard
-            </a>
+            </Link>
             
-            <a
+            <Link
               href="/editor"
               className="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
             >
@@ -126,7 +127,7 @@ export default function UserMenu({ className = '' }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
               Portfolio Editor
-            </a>
+            </Link>
             
             <div className="border-t border-white/10 my-2"></div>
             

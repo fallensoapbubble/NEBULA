@@ -1,22 +1,20 @@
 import { NextResponse } from 'next/server';
-import { clearUserSession } from '../../../../../lib/github-auth.js';
 
 /**
  * Logout endpoint
- * Clears user session and redirects to home page
+ * Note: With NextAuth, logout should be handled client-side using signOut()
+ * This endpoint is kept for backward compatibility
  */
 export async function POST(request) {
   try {
     const { searchParams } = new URL(request.url);
     const redirectTo = searchParams.get('redirect') || '/';
     
-    // Create response with redirect
-    const response = NextResponse.redirect(new URL(redirectTo, request.url));
+    // For NextAuth, we redirect to the signout endpoint
+    const signOutUrl = new URL('/api/auth/signout', request.url);
+    signOutUrl.searchParams.set('callbackUrl', redirectTo);
     
-    // Clear all session cookies
-    clearUserSession(response);
-    
-    return response;
+    return NextResponse.redirect(signOutUrl);
     
   } catch (error) {
     console.error('Logout error:', error);

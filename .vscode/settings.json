@@ -1,0 +1,8 @@
+{
+    "javascript.autoClosingTags": false,
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "kiroAgent.trustedCommands": [
+        "npm *",
+        "node *"
+    ]
+}

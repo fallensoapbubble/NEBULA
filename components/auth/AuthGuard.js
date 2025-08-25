@@ -6,7 +6,7 @@ import { useAuthGuard } from '../../lib/auth-context.js';
  * Authentication Guard Component
  * Protects child components and shows loading/error states
  */
-export default function AuthGuard({ 
+export function AuthGuard({ 
   children, 
   requiredScopes = ['public_repo'],
   fallback = null,
@@ -124,3 +124,6 @@ export function RequireAuth({ children, fallback = null }) {
   
   return children;
 }
+
+// Default export for backward compatibility
+export default AuthGuard;
