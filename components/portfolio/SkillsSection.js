@@ -3,6 +3,8 @@
  * Displays the skills section of a portfolio
  */
 
+import React from 'react';
+
 export function SkillsSection({ skills, className = '' }) {
   if (!skills || skills.length === 0) return null;
 

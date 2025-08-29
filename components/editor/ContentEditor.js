@@ -7,6 +7,9 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { DynamicFormGenerator } from './DynamicFormGenerator.js';
 import { useContentValidation } from './ContentValidator.js';
 import { useAutoSave, AutoSaveStatus } from './AutoSaveManager.js';
+import { useRealTimeValidation, ValidationSummary, InlineValidationFeedback } from './RealTimeValidator.js';
+import { LivePreview, useLivePreview } from './LivePreview.js';
+import { useUnsavedChanges, UnsavedChangesWarning, ChangeHistory, AutoSaveStatus as UnsavedAutoSaveStatus } from './UnsavedChangesTracker.js';
 import { GlassCard, GlassCardHeader, GlassCardContent, GlassCardTitle } from '../ui/Card.js';
 import { GlassButton } from '../ui/Button.js';
 import { STANDARD_PORTFOLIO_SCHEMA } from '../../lib/portfolio-data-standardizer.js';
@@ -19,11 +22,13 @@ import { STANDARD_PORTFOLIO_SCHEMA } from '../../lib/portfolio-data-standardizer
  * @param {Object} props.initialData - Initial portfolio data
  * @param {Object} props.repositoryStructure - Repository file structure
  * @param {Function} props.onSave - Save function
+ * @param {Function} props.onChange - Change callback function
  * @param {Function} props.onConflictCheck - Conflict check function
  * @param {string} props.initialCommitSha - Initial commit SHA
  * @param {boolean} props.autoSave - Enable auto-save (default: true)
  * @param {Object} props.validationOptions - Validation options
  * @param {Object} props.autoSaveOptions - Auto-save options
+ * @param {Object} props.integrationOptions - Integration options
  */
 export const ContentEditor = ({
   owner,
@@ -31,25 +36,83 @@ export const ContentEditor = ({
   initialData = {},
   repositoryStructure = {},
   onSave,
+  onChange,
   onConflictCheck,
   initialCommitSha,
   autoSave = true,
   validationOptions = {},
-  autoSaveOptions = {}
+  autoSaveOptions = {},
+  integrationOptions = {}
 }) => {
   const [portfolioData, setPortfolioData] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [showConflictDialog, setShowConflictDialog] = useState(false);
+  const [showPreview, setShowPreview] = useState(integrationOptions.enableLivePreview || false);
+  const [showValidationDetails, setShowValidationDetails] = useState(false);
 
-  // Content validation hook
+  // Enhanced real-time validation
   const {
-    validateField,
-    validateAll,
+    validationState,
+    isValidating,
+    validationHistory,
+    performFullValidation,
+    validateFieldWithFeedback,
+    getFieldStatus,
+    getValidationSummary,
     clearValidation,
-    getFieldValidation,
-    validationResults,
-    isValidating
-  } = useContentValidation(STANDARD_PORTFOLIO_SCHEMA, validationOptions);
+    isValid,
+    hasErrors,
+    hasWarnings,
+    completeness
+  } = useRealTimeValidation(portfolioData, {
+    strictMode: validationOptions.strictMode || false,
+    validateOnChange: validationOptions.validateOnChange !== false,
+    showSuggestions: true,
+    trackHistory: true,
+    ...validationOptions
+  });
+
+  // Unsaved changes tracking
+  const {
+    currentData,
+    savedData,
+    hasUnsavedChanges,
+    changeHistory,
+    isSaving: isUnsavedChangesSaving,
+    lastSaved,
+    updateData,
+    handleSave: handleUnsavedSave,
+    discardChanges,
+    getChangeSummary,
+    canSave: canSaveUnsaved,
+    changeSummary
+  } = useUnsavedChanges(initialData, onSave, {
+    trackHistory: true,
+    enableAutoSave: autoSave,
+    autoSaveInterval: autoSaveOptions.saveInterval || 30000,
+    warnOnUnload: true
+  });
+
+  // Live preview functionality
+  const {
+    previewData,
+    isLoading: isPreviewLoading,
+    error: previewError,
+    previewMode,
+    isPreviewOpen,
+    lastUpdate: previewLastUpdate,
+    updatePreview,
+    openPreview,
+    closePreview,
+    togglePreviewMode,
+    refreshPreview,
+    hasPreviewData,
+    canPreview
+  } = useLivePreview(owner, repo, portfolioData, {
+    updateDelay: 1000,
+    autoUpdate: true,
+    enableModeToggle: true
+  });
 
   // Auto-save configuration
   const autoSaveConfig = useMemo(() => ({
@@ -94,7 +157,7 @@ export const ContentEditor = ({
     resolveConflicts,
     clearError,
     saveStatus,
-    lastSaved,
+    lastSaved: autoSaveLastSaved,
     conflicts,
     error,
     isOnline
@@ -119,31 +182,44 @@ export const ContentEditor = ({
   // Handle data changes from the form
   const handleDataChange = useCallback(async (fieldPath, value) => {
     // Update local state immediately for responsive UI
-    setPortfolioData(prevData => {
-      const newData = { ...prevData };
-      setNestedValue(newData, fieldPath, value);
-      return newData;
-    });
+    const newData = { ...portfolioData };
+    setNestedValue(newData, fieldPath, value);
+    setPortfolioData(newData);
 
-    // Validate the field
-    await validateField(fieldPath, value, portfolioData);
+    // Update unsaved changes tracker
+    updateData(newData, fieldPath);
+
+    // Validate the field with enhanced feedback
+    await validateFieldWithFeedback(fieldPath, value, newData);
+
+    // Notify parent component of changes
+    if (onChange) {
+      onChange(newData);
+    }
 
     // Schedule auto-save if enabled
     if (autoSave) {
-      const updatedData = { ...portfolioData };
-      setNestedValue(updatedData, fieldPath, value);
-      scheduleSave(updatedData);
+      scheduleSave(newData);
     }
-  }, [portfolioData, validateField, autoSave, scheduleSave]);
+  }, [portfolioData, updateData, validateFieldWithFeedback, onChange, autoSave, scheduleSave]);
 
   // Handle manual save
   const handleManualSave = useCallback(async () => {
     try {
-      await forceSave(portfolioData);
+      if (hasUnsavedChanges) {
+        const result = await handleUnsavedSave();
+        if (result.success) {
+          // Update portfolio data to match saved data
+          setPortfolioData(currentData);
+        }
+        return result;
+      }
+      return { success: true, message: 'No changes to save' };
     } catch (error) {
       console.error('Manual save failed:', error);
+      return { success: false, error: error.message };
     }
-  }, [forceSave, portfolioData]);
+  }, [hasUnsavedChanges, handleUnsavedSave, currentData]);
 
   // Handle conflict resolution
   const handleConflictResolution = useCallback((resolution) => {
@@ -197,28 +273,53 @@ export const ContentEditor = ({
           </div>
           
           <div className="flex items-center gap-4">
-            {/* Auto-save status */}
-            <AutoSaveStatus
-              saveStatus={saveStatus}
-              lastSaved={lastSaved}
-              error={error}
-              conflicts={conflicts}
-              onResolveConflicts={() => setShowConflictDialog(true)}
-              onRetry={handleRetry}
+            {/* Validation Summary */}
+            <ValidationSummary
+              validationSummary={getValidationSummary()}
+              onViewDetails={() => setShowValidationDetails(!showValidationDetails)}
+              className="mr-2"
             />
-            
-            {/* Manual save button (shown when auto-save is disabled) */}
-            {!autoSave && (
+
+            {/* Preview Toggle */}
+            {integrationOptions.enableLivePreview && (
               <GlassButton
-                onClick={handleManualSave}
-                disabled={isLoading}
-                loading={isLoading}
-                variant="primary"
+                onClick={() => setShowPreview(!showPreview)}
+                variant={showPreview ? "primary" : "secondary"}
+                size="sm"
               >
-                Save Changes
+                {showPreview ? "Hide Preview" : "Show Preview"}
               </GlassButton>
             )}
+
+            {/* Auto-save status */}
+            <UnsavedAutoSaveStatus
+              isEnabled={autoSave}
+              lastSaved={lastSaved || autoSaveLastSaved}
+              isSaving={isUnsavedChangesSaving || isLoading}
+              hasUnsavedChanges={hasUnsavedChanges}
+            />
+            
+            {/* Manual save button */}
+            <GlassButton
+              onClick={handleManualSave}
+              disabled={!canSaveUnsaved || isLoading}
+              loading={isUnsavedChangesSaving || isLoading}
+              variant="primary"
+            >
+              Save Changes
+            </GlassButton>
           </div>
+        </div>
+
+        {/* Unsaved Changes Warning */}
+        <div className="mt-4">
+          <UnsavedChangesWarning
+            hasUnsavedChanges={hasUnsavedChanges}
+            changeSummary={changeSummary}
+            onSave={handleManualSave}
+            onDiscard={discardChanges}
+            isSaving={isUnsavedChangesSaving || isLoading}
+          />
         </div>
 
         {/* Network status indicator */}
@@ -234,16 +335,94 @@ export const ContentEditor = ({
         )}
       </div>
 
-      {/* Dynamic Form Generator */}
-      <DynamicFormGenerator
-        portfolioData={portfolioData}
-        repositoryStructure={repositoryStructure}
-        onDataChange={handleDataChange}
-        onSave={handleManualSave}
-        autoSave={autoSave}
-        validationErrors={validationResults}
-        isLoading={isLoading || isValidating}
-      />
+      {/* Main Editor Layout */}
+      <div className={`grid gap-6 ${showPreview ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
+        {/* Editor Panel */}
+        <div className="editor-panel">
+          {/* Validation Details */}
+          {showValidationDetails && (
+            <div className="mb-6">
+              <GlassCard>
+                <GlassCardHeader>
+                  <div className="flex items-center justify-between">
+                    <GlassCardTitle>Validation Details</GlassCardTitle>
+                    <GlassButton
+                      onClick={() => setShowValidationDetails(false)}
+                      variant="secondary"
+                      size="sm"
+                    >
+                      Hide
+                    </GlassButton>
+                  </div>
+                </GlassCardHeader>
+                <GlassCardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <div className="text-2xl font-bold text-green-500">{completeness}%</div>
+                        <div className="text-sm text-text-2">Complete</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-red-500">
+                          {Object.keys(validationState.errors).filter(k => validationState.errors[k]).length}
+                        </div>
+                        <div className="text-sm text-text-2">Errors</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-amber-500">
+                          {Object.values(validationState.warnings).reduce((count, warnings) => count + (warnings?.length || 0), 0)}
+                        </div>
+                        <div className="text-sm text-text-2">Warnings</div>
+                      </div>
+                    </div>
+                    
+                    {integrationOptions.showSaveHistory && changeHistory.length > 0 && (
+                      <ChangeHistory
+                        changeHistory={changeHistory}
+                        maxVisible={5}
+                      />
+                    )}
+                  </div>
+                </GlassCardContent>
+              </GlassCard>
+            </div>
+          )}
+
+          {/* Dynamic Form Generator with Enhanced Validation */}
+          <DynamicFormGenerator
+            portfolioData={portfolioData}
+            repositoryStructure={repositoryStructure}
+            onDataChange={handleDataChange}
+            onSave={handleManualSave}
+            autoSave={autoSave}
+            validationErrors={validationState.errors}
+            validationWarnings={validationState.warnings}
+            validationSuggestions={validationState.suggestions}
+            getFieldStatus={getFieldStatus}
+            isLoading={isLoading || isValidating}
+            renderFieldValidation={(fieldPath) => (
+              <InlineValidationFeedback
+                fieldPath={fieldPath}
+                validationStatus={getFieldStatus(fieldPath)}
+                showSuggestions={true}
+              />
+            )}
+          />
+        </div>
+
+        {/* Live Preview Panel */}
+        {showPreview && (
+          <div className="preview-panel">
+            <LivePreview
+              owner={owner}
+              repo={repo}
+              portfolioData={portfolioData}
+              embedded={true}
+              showControls={true}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Conflict Resolution Dialog */}
       {showConflictDialog && (

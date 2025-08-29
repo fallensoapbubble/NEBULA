@@ -1,6 +1,6 @@
 'use client';
 
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 /**
  * Error Boundary for Authentication Errors

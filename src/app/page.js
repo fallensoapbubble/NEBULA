@@ -60,10 +60,7 @@ export default function Home() {
   const sidebarItems = [
     { icon: '🏠', label: 'Home', href: '/', active: true },
     { icon: '🎨', label: 'Templates', href: '/templates' },
-    { icon: '📊', label: 'Dashboard', href: '/dashboard' },
-    { icon: '⚙️', label: 'Settings', href: '/settings' },
-    { icon: '📚', label: 'Documentation', href: '/docs' },
-    { icon: '💬', label: 'Support', href: '/support' }
+    { icon: '📊', label: 'Dashboard', href: '/dashboard' }
   ];
 
   return (

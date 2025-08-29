@@ -3,6 +3,8 @@
  * Displays the about section of a portfolio
  */
 
+import React from 'react';
+
 export function AboutSection({ about, className = '' }) {
   if (!about) return null;
 

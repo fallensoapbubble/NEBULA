@@ -16,10 +16,7 @@ export const AppLayout = ({
   const defaultSidebarItems = [
     { icon: '🏠', label: 'Home', href: '/', active: true },
     { icon: '🎨', label: 'Templates', href: '/templates' },
-    { icon: '📊', label: 'Dashboard', href: '/dashboard' },
-    { icon: '⚙️', label: 'Settings', href: '/settings' },
-    { icon: '📚', label: 'Documentation', href: '/docs' },
-    { icon: '💬', label: 'Support', href: '/support' }
+    { icon: '📊', label: 'Dashboard', href: '/dashboard' }
   ];
 
   const menuItems = sidebarItems.length > 0 ? sidebarItems : defaultSidebarItems;

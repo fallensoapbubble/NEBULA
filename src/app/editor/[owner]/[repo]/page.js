@@ -9,6 +9,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ContentEditor } from '../../../../../components/editor/ContentEditor.js';
+import { EditorProvider } from '../../../../../components/editor/EditorContext.js';
+import { EditorLayout } from '../../../../../components/editor/EditorLayout.js';
 import { useEditorIntegration, useEditorNavigation, useLivePreview } from '../../../../../lib/hooks/use-editor-integration.js';
 import { GlassCard, GlassCardHeader, GlassCardContent, GlassCardTitle } from '../../../../../components/ui/Card.js';
 import { GlassButton } from '../../../../../components/ui/Button.js';
@@ -172,183 +174,146 @@ Timestamp: ${new Date().toISOString()}`,
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gradient-to-br from-background-1 to-background-2">
-        <div className="container mx-auto px-4 py-8">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-4xl font-bold text-text-1 mb-2">
-                  Portfolio Editor
-                </h1>
-                <p className="text-text-2">
-                  Editing <span className="font-mono text-accent-1">{owner}/{repo}</span>
-                </p>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <GlassButton
-                  onClick={openPreview}
-                  variant="secondary"
-                  disabled={!isInitialized}
-                >
-                  {isPreviewOpen ? 'Refresh Preview' : 'Live Preview'}
-                </GlassButton>
-                
-                <GlassButton
-                  onClick={navigateToPortfolio}
-                  variant="secondary"
-                >
-                  View Portfolio
-                </GlassButton>
-                
-                <GlassButton
-                  onClick={navigateToRepository}
-                  variant="outline"
-                  size="sm"
-                >
-                  GitHub
-                </GlassButton>
-              </div>
-            </div>
-          </div>
-
-          {/* Error Display */}
-          {error && (
-            <div className="mb-6">
-              <GlassCard variant="elevated" className="border-red-500 bg-red-50/10">
-                <GlassCardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-red-500">
-                      <span className="text-lg">❌</span>
-                      <span className="font-medium">Error</span>
-                    </div>
-                    <GlassButton
-                      onClick={clearError}
-                      variant="secondary"
-                      size="sm"
-                    >
-                      Dismiss
-                    </GlassButton>
-                  </div>
-                  <p className="text-red-600 text-sm mt-2">{error}</p>
-                </GlassCardContent>
-              </GlassCard>
-            </div>
-          )}
-
-          {/* Conflicts Display */}
-          {conflicts && (
-            <div className="mb-6">
-              <GlassCard variant="elevated" className="border-amber-500 bg-amber-50/10">
-                <GlassCardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-amber-600">
-                      <span className="text-lg">⚠️</span>
-                      <span className="font-medium">Conflicts Detected</span>
-                    </div>
-                    <div className="flex gap-2">
+      <EditorProvider owner={owner} repo={repo}>
+        <EditorLayout>
+          <div className="container mx-auto px-4 py-8">
+            {/* Error Display */}
+            {error && (
+              <div className="mb-6">
+                <GlassCard variant="elevated" className="border-red-500 bg-red-50/10">
+                  <GlassCardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-red-500">
+                        <span className="text-lg">❌</span>
+                        <span className="font-medium">Error</span>
+                      </div>
                       <GlassButton
-                        onClick={() => resolveConflicts('keep-local')}
+                        onClick={clearError}
                         variant="secondary"
-                        size="sm"
-                      >
-                        Keep Local
-                      </GlassButton>
-                      <GlassButton
-                        onClick={() => resolveConflicts('keep-remote')}
-                        variant="secondary"
-                        size="sm"
-                      >
-                        Keep Remote
-                      </GlassButton>
-                      <GlassButton
-                        onClick={clearConflicts}
-                        variant="outline"
                         size="sm"
                       >
                         Dismiss
                       </GlassButton>
                     </div>
-                  </div>
-                  <p className="text-amber-700 text-sm mt-2">
-                    {conflicts.length} file(s) have conflicts that need resolution.
-                  </p>
-                </GlassCardContent>
-              </GlassCard>
-            </div>
-          )}
+                    <p className="text-red-600 text-sm mt-2">{error}</p>
+                  </GlassCardContent>
+                </GlassCard>
+              </div>
+            )}
 
-          {/* Sync Status Display */}
-          {syncStatus && !syncStatus.upToDate && (
-            <div className="mb-6">
-              <GlassCard variant="elevated" className="border-blue-500 bg-blue-50/10">
-                <GlassCardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-blue-600">
-                      <span className="text-lg">🔄</span>
-                      <span className="font-medium">Repository Updates Available</span>
+            {/* Conflicts Display */}
+            {conflicts && (
+              <div className="mb-6">
+                <GlassCard variant="elevated" className="border-amber-500 bg-amber-50/10">
+                  <GlassCardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-amber-600">
+                        <span className="text-lg">⚠️</span>
+                        <span className="font-medium">Conflicts Detected</span>
+                      </div>
+                      <div className="flex gap-2">
+                        <GlassButton
+                          onClick={() => resolveConflicts('keep-local')}
+                          variant="secondary"
+                          size="sm"
+                        >
+                          Keep Local
+                        </GlassButton>
+                        <GlassButton
+                          onClick={() => resolveConflicts('keep-remote')}
+                          variant="secondary"
+                          size="sm"
+                        >
+                          Keep Remote
+                        </GlassButton>
+                        <GlassButton
+                          onClick={clearConflicts}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Dismiss
+                        </GlassButton>
+                      </div>
                     </div>
-                    <GlassButton
-                      onClick={refresh}
-                      variant="secondary"
-                      size="sm"
-                    >
-                      Sync
-                    </GlassButton>
-                  </div>
-                  <p className="text-blue-700 text-sm mt-2">
-                    {syncStatus.newCommitsCount} new commit(s) available.
-                  </p>
-                </GlassCardContent>
-              </GlassCard>
+                    <p className="text-amber-700 text-sm mt-2">
+                      {conflicts.length} file(s) have conflicts that need resolution.
+                    </p>
+                  </GlassCardContent>
+                </GlassCard>
+              </div>
+            )}
+
+            {/* Sync Status Display */}
+            {syncStatus && !syncStatus.upToDate && (
+              <div className="mb-6">
+                <GlassCard variant="elevated" className="border-blue-500 bg-blue-50/10">
+                  <GlassCardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-blue-600">
+                        <span className="text-lg">🔄</span>
+                        <span className="font-medium">Repository Updates Available</span>
+                      </div>
+                      <GlassButton
+                        onClick={refresh}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        Sync
+                      </GlassButton>
+                    </div>
+                    <p className="text-blue-700 text-sm mt-2">
+                      {syncStatus.newCommitsCount} new commit(s) available.
+                    </p>
+                  </GlassCardContent>
+                </GlassCard>
+              </div>
+            )}
+
+            {/* Content Editor */}
+            {isInitialized && localPortfolioData !== null && (
+              <ContentEditor
+                owner={owner}
+                repo={repo}
+                initialData={localPortfolioData}
+                repositoryStructure={editorData?.structure}
+                onSave={handleSave}
+                onChange={handleContentChange}
+                initialCommitSha={editorData?.commit?.sha}
+                autoSave={true}
+                validationOptions={{
+                  strictMode: false,
+                  validateOnChange: true
+                }}
+                autoSaveOptions={{
+                  saveInterval: 2000,
+                  enableConflictDetection: true,
+                  maxRetries: 3
+                }}
+                integrationOptions={{
+                  enableLivePreview: true,
+                  showSaveHistory: true,
+                  saveHistory: saveHistory
+                }}
+              />
+            )}
+
+            {/* Footer */}
+            <div className="mt-12 text-center text-white/60 text-sm">
+              <p>
+                Changes are saved automatically to your GitHub repository.{' '}
+                <a 
+                  href={`https://github.com/${owner}/${repo}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/80 hover:text-white hover:underline transition-colors"
+                >
+                  View on GitHub
+                </a>
+              </p>
             </div>
-          )}
-
-          {/* Content Editor */}
-          {isInitialized && localPortfolioData !== null && (
-            <ContentEditor
-              owner={owner}
-              repo={repo}
-              initialData={localPortfolioData}
-              repositoryStructure={editorData?.structure}
-              onSave={handleSave}
-              onChange={handleContentChange}
-              initialCommitSha={editorData?.commit?.sha}
-              autoSave={true}
-              validationOptions={{
-                strictMode: false,
-                validateOnChange: true
-              }}
-              autoSaveOptions={{
-                saveInterval: 2000,
-                enableConflictDetection: true,
-                maxRetries: 3
-              }}
-              integrationOptions={{
-                enableLivePreview: true,
-                showSaveHistory: true,
-                saveHistory: saveHistory
-              }}
-            />
-          )}
-
-          {/* Footer */}
-          <div className="mt-12 text-center text-text-3 text-sm">
-            <p>
-              Changes are saved automatically to your GitHub repository.{' '}
-              <a 
-                href={`https://github.com/${owner}/${repo}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent-1 hover:underline"
-              >
-                View on GitHub
-              </a>
-            </p>
           </div>
-        </div>
-      </div>
+        </EditorLayout>
+      </EditorProvider>
     </AuthGuard>
   );
 }

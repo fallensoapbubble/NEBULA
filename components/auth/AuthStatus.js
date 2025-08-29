@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useAuth } from '../../lib/auth-context.js';
 import { useAuthError, useRateLimit } from '../../lib/auth-hooks.js';
 

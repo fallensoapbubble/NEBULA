@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from 'next/link';
 import { createAuthError } from '@/lib/auth-errors.js';
 

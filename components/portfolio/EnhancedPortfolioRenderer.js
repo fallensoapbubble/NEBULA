@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { TemplateRenderingEngine } from '../../lib/template-rendering-engine';
 import { PortfolioHeader } from './PortfolioHeader';
 import { AboutSection } from './AboutSection';

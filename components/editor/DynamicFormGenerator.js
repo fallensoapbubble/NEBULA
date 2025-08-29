@@ -15,6 +15,10 @@ import {
 } from '../ui/Input.js';
 import { GlassButton } from '../ui/Button.js';
 import { GlassCard, GlassCardHeader, GlassCardContent, GlassCardTitle } from '../ui/Card.js';
+import { MarkdownEditor } from './MarkdownEditor.js';
+import { ArrayEditor } from './ArrayEditor.js';
+import { ObjectEditor } from './ObjectEditor.js';
+import { ImageUpload } from './ImageUpload.js';
 import { STANDARD_PORTFOLIO_SCHEMA } from '../../lib/portfolio-data-standardizer.js';
 
 /**
@@ -35,6 +39,10 @@ export const DynamicFormGenerator = ({
   onSave,
   autoSave = true,
   validationErrors = {},
+  validationWarnings = {},
+  validationSuggestions = {},
+  getFieldStatus,
+  renderFieldValidation,
   isLoading = false
 }) => {
   const [formData, setFormData] = useState(portfolioData);
@@ -222,15 +230,20 @@ const FormSection = ({ section, data, errors, onChange }) => {
       {isExpanded && (
         <GlassCardContent>
           <div className="space-y-4">
-            {section.fields.map((field) => (
-              <FormField
-                key={field.path}
-                field={field}
-                value={getNestedValue(data, field.relativePath)}
-                error={errors[`${section.key}.${field.relativePath}`]}
-                onChange={(value) => onChange(`${section.key}.${field.relativePath}`, value)}
-              />
-            ))}
+            {section.fields.map((field) => {
+              const fieldPath = `${section.key}.${field.relativePath}`;
+              return (
+                <div key={field.path}>
+                  <FormField
+                    field={field}
+                    value={getNestedValue(data, field.relativePath)}
+                    error={errors[fieldPath]}
+                    onChange={(value) => onChange(fieldPath, value)}
+                  />
+                  {renderFieldValidation && renderFieldValidation(fieldPath)}
+                </div>
+              );
+            })}
           </div>
         </GlassCardContent>
       )}
@@ -250,92 +263,73 @@ const FormField = ({ field, value, error, onChange }) => {
     onChange(newValue);
   };
 
-  const handleArrayChange = (index, newValue) => {
-    const currentArray = Array.isArray(value) ? [...value] : [];
-    currentArray[index] = newValue;
-    onChange(currentArray);
-  };
+  // Handle markdown fields
+  if (field.type === 'markdown') {
+    return (
+      <MarkdownEditor
+        value={value || ''}
+        onChange={onChange}
+        label={field.label}
+        required={field.required}
+        error={error}
+        helpText={field.helpText}
+        placeholder={field.placeholder}
+      />
+    );
+  }
 
-  const handleArrayAdd = () => {
-    const currentArray = Array.isArray(value) ? [...value] : [];
-    currentArray.push(field.arrayItemDefault || '');
-    onChange(currentArray);
-  };
-
-  const handleArrayRemove = (index) => {
-    const currentArray = Array.isArray(value) ? [...value] : [];
-    currentArray.splice(index, 1);
-    onChange(currentArray);
-  };
+  // Handle image fields
+  if (field.type === 'image') {
+    return (
+      <ImageUpload
+        value={value}
+        onChange={onChange}
+        label={field.label}
+        required={field.required}
+        error={error}
+        helpText={field.helpText}
+        acceptedTypes={field.acceptedTypes}
+        maxSize={field.maxSize}
+        maxWidth={field.maxWidth}
+        maxHeight={field.maxHeight}
+      />
+    );
+  }
 
   // Handle array fields
   if (field.type === 'array') {
-    const arrayValue = Array.isArray(value) ? value : [];
-    
     return (
-      <GlassFormGroup>
-        <GlassLabel required={field.required}>
-          {field.label}
-        </GlassLabel>
-        
-        <div className="space-y-2">
-          {arrayValue.map((item, index) => (
-            <div key={index} className="flex items-center gap-2">
-              {field.arrayItemType === 'object' ? (
-                <ObjectField
-                  schema={field.arrayItemSchema}
-                  value={item}
-                  onChange={(newValue) => handleArrayChange(index, newValue)}
-                />
-              ) : (
-                <GlassInput
-                  value={item || ''}
-                  onChange={(e) => handleArrayChange(index, e.target.value)}
-                  placeholder={field.placeholder}
-                />
-              )}
-              <GlassButton
-                variant="error"
-                size="sm"
-                onClick={() => handleArrayRemove(index)}
-              >
-                Remove
-              </GlassButton>
-            </div>
-          ))}
-          
-          <GlassButton
-            variant="secondary"
-            size="sm"
-            onClick={handleArrayAdd}
-          >
-            Add {field.label}
-          </GlassButton>
-        </div>
-        
-        {field.helpText && <GlassHelpText>{field.helpText}</GlassHelpText>}
-        <GlassErrorMessage>{error}</GlassErrorMessage>
-      </GlassFormGroup>
+      <ArrayEditor
+        value={value}
+        onChange={onChange}
+        label={field.label}
+        required={field.required}
+        error={error}
+        helpText={field.helpText}
+        itemType={field.arrayItemType || 'string'}
+        itemSchema={field.arrayItemSchema}
+        defaultItem={field.arrayItemDefault}
+        minItems={field.minItems}
+        maxItems={field.maxItems}
+        sortable={field.sortable !== false}
+      />
     );
   }
 
   // Handle object fields
   if (field.type === 'object') {
     return (
-      <GlassFormGroup>
-        <GlassLabel required={field.required}>
-          {field.label}
-        </GlassLabel>
-        
-        <ObjectField
-          schema={field.objectSchema}
-          value={value || {}}
-          onChange={onChange}
-        />
-        
-        {field.helpText && <GlassHelpText>{field.helpText}</GlassHelpText>}
-        <GlassErrorMessage>{error}</GlassErrorMessage>
-      </GlassFormGroup>
+      <ObjectEditor
+        value={value || {}}
+        onChange={onChange}
+        schema={field.objectSchema}
+        label={field.label}
+        required={field.required}
+        error={error}
+        helpText={field.helpText}
+        compact={field.compact}
+        collapsible={field.collapsible !== false}
+      />
     );
   }
 
@@ -412,40 +406,7 @@ const FormField = ({ field, value, error, onChange }) => {
   );
 };
 
-/**
- * Object Field Component
- * Renders nested object fields
- */
-const ObjectField = ({ schema, value, onChange }) => {
-  const handleFieldChange = (fieldKey, fieldValue) => {
-    const newValue = { ...value, [fieldKey]: fieldValue };
-    onChange(newValue);
-  };
 
-  return (
-    <div className="border border-border-1 rounded-lg p-4 space-y-3">
-      {Object.entries(schema).map(([key, fieldDef]) => (
-        <FormField
-          key={key}
-          field={{
-            path: key,
-            relativePath: key,
-            label: fieldDef.label || key,
-            type: fieldDef.type,
-            required: fieldDef.required,
-            placeholder: fieldDef.placeholder,
-            helpText: fieldDef.description,
-            options: fieldDef.options,
-            multiline: fieldDef.multiline,
-            rows: fieldDef.rows
-          }}
-          value={value[key]}
-          onChange={(newValue) => handleFieldChange(key, newValue)}
-        />
-      ))}
-    </div>
-  );
-};
 
 // Utility functions
 
@@ -594,18 +555,33 @@ function generateFieldsFromSchema(schemaDef, basePath) {
         field.inputType = 'number';
         break;
       
+      case 'markdown':
+        field.type = 'markdown';
+        field.minHeight = fieldDef.minHeight || 200;
+        field.showPreview = fieldDef.showPreview !== false;
+        break;
+      
+      case 'image':
+        field.type = 'image';
+        field.acceptedTypes = fieldDef.acceptedTypes || ['image/jpeg', 'image/png', 'image/webp'];
+        field.maxSize = fieldDef.maxSize || 5 * 1024 * 1024; // 5MB
+        field.maxWidth = fieldDef.maxWidth || 2048;
+        field.maxHeight = fieldDef.maxHeight || 2048;
+        break;
+      
       case 'array':
-        if (fieldDef.items?.type === 'string') {
-          field.arrayItemType = 'string';
-          field.arrayItemDefault = '';
-        } else if (fieldDef.items?.type === 'object') {
-          field.arrayItemType = 'object';
-          field.arrayItemSchema = fieldDef.items;
-        }
+        field.arrayItemType = fieldDef.items?.type || 'string';
+        field.arrayItemSchema = fieldDef.items;
+        field.arrayItemDefault = getDefaultValueForType(fieldDef.items?.type || 'string');
+        field.minItems = fieldDef.minItems || 0;
+        field.maxItems = fieldDef.maxItems || Infinity;
+        field.sortable = fieldDef.sortable !== false;
         break;
       
       case 'object':
-        field.objectSchema = fieldDef;
+        field.objectSchema = fieldDef.properties || fieldDef;
+        field.compact = fieldDef.compact || false;
+        field.collapsible = fieldDef.collapsible !== false;
         break;
     }
 
@@ -631,6 +607,32 @@ function generateFieldsFromSchema(schemaDef, basePath) {
   });
 
   return fields;
+}
+
+/**
+ * Get default value for a specific type
+ */
+function getDefaultValueForType(type) {
+  switch (type) {
+    case 'string':
+    case 'text':
+    case 'email':
+    case 'url':
+    case 'markdown':
+      return '';
+    case 'number':
+      return 0;
+    case 'boolean':
+      return false;
+    case 'array':
+      return [];
+    case 'object':
+      return {};
+    case 'image':
+      return null;
+    default:
+      return null;
+  }
 }
 
 /**

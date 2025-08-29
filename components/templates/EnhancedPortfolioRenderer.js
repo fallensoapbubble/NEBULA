@@ -605,7 +605,7 @@ export const EnhancedPortfolioImage = ({
 /**
  * GitHub Stats Component
  */
-const GitHubStats = ({ stars, forks, watchers, className = '' }) => {
+export const GitHubStats = ({ stars, forks, watchers, className = '' }) => {
   const stats = [
     { key: 'stars', value: stars, icon: '⭐' },
     { key: 'forks', value: forks, icon: '🔀' },

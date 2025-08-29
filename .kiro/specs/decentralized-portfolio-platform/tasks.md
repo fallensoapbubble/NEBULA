@@ -66,19 +66,13 @@
 
 - [ ] 4. REST API Endpoints for GitHub Integration
 
-
-
-
-
   - [x] 4.1 Create repository management API routes
-
 
     - Implement `src/app/api/repositories/fork/route.js` for forking templates
     - Create `src/app/api/repositories/[owner]/[repo]/route.js` for repository info
     - Build `src/app/api/repositories/[owner]/[repo]/structure/route.js` for file tree
     - Add `src/app/api/repositories/[owner]/[repo]/status/route.js` for sync status
     - _Requirements: 3.1, 3.2, 4.1_
-
 
   - [x] 4.2 Build content management API routes
 
@@ -87,7 +81,6 @@
     - Build `POST /api/content/[owner]/[repo]/commit` for batch commits
     - Add `GET /api/content/[owner]/[repo]/history` for commit history
     - _Requirements: 5.1, 5.3, 5.4, 10.1_
-
 
   - [x] 4.3 Create template and validation API routes
 
@@ -177,168 +170,166 @@
     - Add responsive design for mobile and desktop
     - _Requirements: Design System specifications, User experience_
 
-- [ ] 7. Template Gallery Interface
+- [x] 7. Template Gallery Interface
 
-  - [ ] 7.1 Create template gallery page
+  - [x] 7.1 Create Template Gallery Page
 
-    - Build template grid layout with glassmorphic cards
-    - Implement template preview image display
-    - Add template filtering and search functionality
-    - Create template detail modal with fork option
+    - Build gallery with glassmorphic card grid layout
+    - Implement template preview images (dark + light mode)
+    - Add filtering and search functionality
+    - Create template detail modal with "Create Repo" option
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [ ] 7.2 Implement template forking workflow
+  - [x] 7.2 Implement Repository Creation from Template
 
-    - Create fork confirmation dialog with repository naming
-    - Implement forking progress indicator and status updates
-    - Add fork verification and success confirmation
-    - Build error handling for fork failures with retry options
+    - Add confirmation dialog with repository naming
+    - Integrate GitHub API for repo creation in user's account
+    - Show progress indicator and status updates during repo creation
+    - Add verification and success confirmation
+    - Build error handling with retry option
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
 
-  - [ ] 7.3 Add template management features
+  - [x] 7.3 Manage Template Metadata
 
-    - Implement template availability checking
-    - Create template status indicators and alternatives
-    - Add template metadata display (description, author, tags)
-    - Build template rating and popularity system
+    - Show availability status (dark/light mode)
+    - Display description, author, and tags
+    - Track popularity (fork count, usage stats)
     - _Requirements: 2.4_
 
-- [ ] 8. Web Editor Interface
+- [x] 8. Web Editor Interface
 
-  - [ ] 8.1 Build main editor layout
+  - [x] 8.1 Build Main Editor Layout
 
-    - Create EditorLayout with sidebar, breadcrumbs, and content area
-    - Implement responsive layout with collapsible sidebar
-    - Add editor state management with React context
-    - Build navigation state tracking and breadcrumb updates
-    - _Requirements: 5.1, Navigation specifications_
+    - Create layout with sidebar + content area
+    - Remove unnecessary routes (/support, /settings, /documentation)
+    - Implement responsive + collapsible sidebar
+    - Manage editor state with React context
+    - Add breadcrumb navigation
+    - _Requirements: 5.1_
 
-  - [ ] 8.2 Implement content editing components
+  - [x] 8.2 Implement Editing Components
 
-    - Create TextInput component for string fields
-    - Build TextArea component for text fields
-    - Implement MarkdownEditor with preview functionality
-    - Create ArrayEditor for managing list items
-    - Add ObjectEditor for nested object editing
-    - Build ImageUpload component with asset management
-    - _Requirements: 5.1, 5.2, Template schema specifications_
+    - TextInput (string fields)
+    - TextArea (long text fields)
 
-  - [ ] 8.3 Add real-time validation and preview
+    - Markdown editor with preview
+    - Array editor (lists)
+    - Object editor (nested objects)
+    - Image upload with asset management
+    - _Requirements: 5.1, 5.2_
 
-    - Implement field validation based on schema rules
-    - Create real-time content validation feedback
-    - Build live preview pane with template rendering
-    - Add unsaved changes tracking and warnings
+  - [x] 8.3 Real-Time Validation + Preview
+
+    - Schema-based validation with inline feedback
+    - Live preview of user's template (dark/light mode)
+    - Track unsaved changes with warnings
     - _Requirements: 5.2_
 
-  - [ ] 8.4 Build save and synchronization system
+  - [x] 8.4 Save & Sync with GitHub
 
-    - Implement save functionality with GitHub API integration
-    - Create commit message generation and customization
-    - Add synchronization checking before saves
-    - Build conflict resolution UI and user prompts
-    - _Requirements: 5.3, 5.4, 5.5, 10.3, 10.4, 10.5_
+    - GitHub API integration for commits
+    - Generate commit messages automatically (with edit option)
+    - Add sync check before save
+    - Handle merge conflicts with UI prompts
+    - _Requirements: 5.3, 5.4, 10.3_
 
-- [ ] 9. Dynamic Portfolio Rendering with ISR
+- [x] 9. Public Portfolio (Dynamic Routes + ISR)
 
-  - [ ] 9.1 Create dynamic portfolio route
+  - [x] 9.1 Create Public Portfolio Route
 
-    - Implement `src/app/[username]/[repo]/page.js` with ISR
-    - Build `generateStaticParams` and page component with GitHub API integration
-    - Configure ISR with revalidate settings
-    - Add error handling for non-existent repositories
-    - _Requirements: 6.1, 6.2, 6.3, 7.1, 7.2, 7.3_
+    - Implement src/app/[username]/[repo]/page.js with ISR
+    - Show portfolio from user's GitHub repo data
+    - Handle errors for non-existent repos
+    - _Requirements: 6.1, 6.2, 6.3_
 
-  - [ ] 9.2 Implement portfolio content fetching
+  - [x] 9.2 Fetch + Render Content
 
-    - Create portfolio content retrieval from GitHub repositories
-    - Build template analysis and component selection
-    - Implement content parsing and validation
-    - Add error pages for invalid or private repositories
-    - _Requirements: 6.3, 6.4, 6.5, 6.6, 7.4, 7.5, 7.6, 7.7_
+    - Pull data from user's repo (markdown, metadata, images)
+    - Apply chosen template (dark/light)
+    - Validate + parse content before rendering
+    - Show error page for private/invalid repos
+    - _Requirements: 6.3, 6.4, 7.4_
 
-  - [ ] 9.3 Add ISR cache management
+  - [x] 9.3 Cache & Update (ISR + Webhooks)
 
-    - Implement manual cache revalidation API endpoint
-    - Create GitHub webhook handler for automatic updates
-    - Build cache invalidation strategies
-    - Add performance monitoring and optimization
-    - _Requirements: 11.1, 11.4, ISR specifications_
+    - Manual revalidation API endpoint
+    - GitHub webhook for auto-refresh on push
+    - Cache invalidation strategy for new commits
+    - _Requirements: 11.1, 11.4_
 
-- [ ] 10. Error Handling and User Experience
+- [x] 10. Error Handling & User Feedback
 
-  - [ ] 10.1 Implement comprehensive error handling
+  - [x] 10.1 Error Handling
 
-    - Create GitHubAPIError class with specific error types
-    - Build user-friendly error messages and recovery options
-    - Implement error boundaries for React components
-    - Add error logging and monitoring
-    - _Requirements: 9.1, 9.2, 9.3, 9.4_
+    - Create GitHubAPIError with specific cases
+    - Show user-friendly error messages + recovery actions
+    - Add error boundaries in React
+    - Log + monitor errors
+    - _Requirements: 9.1, 9.2_
 
-  - [ ] 10.2 Build loading and feedback systems
+  - [x] 10.2 Loading + Feedback
 
-    - Create loading states for all async operations
-    - Implement progress indicators for long-running tasks
-    - Add success confirmations and status updates
-    - Build toast notification system for user feedback
-    - _Requirements: User experience specifications_
+    - Loading states for async ops (repo creation, save, fetch)
+    - Progress indicators + success confirmations
+    - Toast notification system
+    - _Requirements: UX specs_
 
-  - [ ] 10.3 Add offline and network error handling
+  - [x] 10.3 Offline & Network Issues
 
-    - Implement network connectivity detection
-    - Create offline mode with cached content
-    - Build retry mechanisms for failed operations
-    - Add graceful degradation for service unavailability
-    - _Requirements: 9.4, 11.4_
+    - Detect network connectivity
+    - Cache for offline reading
+    - Retry failed requests
+    - Graceful fallback for downtime
+    - _Requirements: 9.4_
 
-- [ ] 11. Performance Optimization and Testing
+- [ ] 11. Performance + Testing
 
-  - [ ] 11.1 Implement performance optimizations
+  - [ ] 11.1 Optimizations
 
-    - Add image optimization with Next.js Image component
-    - Implement lazy loading for portfolio sections
-    - Create intelligent prefetching for likely-visited pages
-    - Build asset compression and CDN integration
-    - _Requirements: 11.1, 11.4, Performance specifications_
+    - Next.js image optimization
+    - Lazy loading for sections
 
-  - [ ] 11.2 Add monitoring and analytics
+    - Prefetch likely-visited pages
+    - Asset compression + CDN
+    - _Requirements: 11.1_
 
-    - Implement performance monitoring with Core Web Vitals
-    - Create GitHub API rate limit monitoring
-    - Add user interaction analytics
-    - Build error tracking and reporting
-    - _Requirements: 11.3, 11.4_
+  - [ ] 11.2 Monitoring + Analytics
 
-  - [ ] 11.3 Create comprehensive test suite
+    - Track Core Web Vitals
+    - Monitor GitHub API rate limits
+    - Log user interactions
+    - Error tracking + reporting
+    - _Requirements: 11.3_
 
-    - Write unit tests for all service classes and utilities
-    - Implement integration tests for API routes and workflows
-    - Create end-to-end tests for complete user journeys
-    - Add performance tests for ISR and rendering
-    - _Requirements: Testing strategy specifications_
+  - [ ] 11.3 Testing Suite
 
-- [ ] 12. Deployment and Production Setup
+    - Unit tests for services/utilities
+    - Integration tests for API + workflows
+    - End-to-end tests for repo creation → publish flow
+    - Performance tests for ISR
+    - _Requirements: Testing strategy_
 
-  - [ ] 12.1 Configure production environment
+- [ ] 12. Deployment + Documentation
 
-    - Set up Vercel deployment configuration
-    - Configure environment variables for production
-    - Implement security headers and CORS policies
-    - Add domain configuration and SSL setup
-    - _Requirements: Deployment specifications_
+  - [ ] 12.1 Production Setup
 
-  - [ ] 12.2 Set up monitoring and logging
+    - Vercel deployment config
+    - Env variables for GitHub API + secrets
+    - Security headers + CORS
+    - Custom domain + SSL
+    - _Requirements: Deployment specs_
 
-    - Implement application monitoring with error tracking
-    - Create performance monitoring dashboards
-    - Add GitHub API usage monitoring
-    - Build alerting for critical issues
-    - _Requirements: 11.4, Production monitoring_
+  - [ ] 12.2 Monitoring & Alerts
 
-  - [ ] 12.3 Create documentation and guides
+    - Error + performance monitoring dashboards
+    - GitHub API usage tracking
+    - Alerts for rate-limit / failures
+    - _Requirements: Production monitoring_
 
-    - Write user documentation for platform usage
-    - Create template creator guide with examples
-    - Build API documentation for developers
-    - Add troubleshooting guides and FAQs
-    - _Requirements: User experience and template creation_
+  - [ ] 12.3 Docs + Guides
+
+    - User guide: create + publish article repos
+    - Template creator guide (dark/light examples)
+    - API documentation
+    - Troubleshooting + FAQs
+    - _Requirements: UX + template creation_
