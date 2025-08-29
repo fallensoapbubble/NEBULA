@@ -122,7 +122,7 @@ export const ContentEditor = ({
       setIsLoading(true);
       try {
         // Validate data before saving
-        const validationResult = await validateAll(data);
+        const validationResult = await performFullValidation(data);
         
         if (!validationResult.isValid && validationOptions.strictMode) {
           throw new Error('Validation failed. Please fix errors before saving.');
@@ -147,7 +147,7 @@ export const ContentEditor = ({
     },
     conflictCheckFunction: onConflictCheck,
     initialCommitSha
-  }), [owner, repo, onSave, onConflictCheck, initialCommitSha, validateAll, validationOptions.strictMode]);
+  }), [owner, repo, onSave, onConflictCheck, initialCommitSha, performFullValidation, validationOptions.strictMode]);
 
   // Auto-save hook
   const {

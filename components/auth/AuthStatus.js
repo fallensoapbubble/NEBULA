@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { useAuth } from '../../lib/auth-context.js';
 import { useAuthError, useRateLimit } from '../../lib/auth-hooks.js';
 
@@ -35,9 +36,11 @@ export default function AuthStatus({ showDetails = false, className = '' }) {
       {auth.isAuthenticated && auth.user && (
         <div className="mb-3 p-3 bg-white/5 rounded-lg">
           <div className="flex items-center gap-3">
-            <img
+            <Image
               src={auth.user.avatarUrl || auth.user.avatar_url}
               alt={auth.user.name || auth.user.login}
+              width={32}
+              height={32}
               className="w-8 h-8 rounded-full border border-white/20"
             />
             <div>

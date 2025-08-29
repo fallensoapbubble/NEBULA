@@ -178,11 +178,12 @@ export function OfflineCapabilities() {
   useEffect(() => {
     // Get cache statistics
     if (swStatus === 'active') {
-      networkManager.getCacheStats().then(stats => {
+      try {
+        const stats = networkManager.getCacheStats();
         setCacheStats(stats);
-      }).catch(error => {
+      } catch (error) {
         console.error('Failed to get cache stats', error);
-      });
+      }
     }
   }, [swStatus]);
 

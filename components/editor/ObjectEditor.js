@@ -46,7 +46,7 @@ export const ObjectEditor = ({
   const [expandedSections, setExpandedSections] = useState(new Set(Object.keys(schema)));
 
   // Ensure value is always an object
-  const objectValue = typeof value === 'object' && value !== null ? value : {};
+  const objectValue = useMemo(() => typeof value === 'object' && value !== null ? value : {}, [value]);
 
   // Handle field change
   const handleFieldChange = useCallback((fieldKey, fieldValue) => {

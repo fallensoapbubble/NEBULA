@@ -3,7 +3,7 @@
  * Handles editing of array fields with add/remove/reorder functionality
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { GlassCard, GlassCardHeader, GlassCardContent, GlassCardTitle } from '../ui/Card.js';
 import { GlassButton, GlassIconButton } from '../ui/Button.js';
 import { GlassInput, GlassTextarea, GlassLabel, GlassFormGroup, GlassErrorMessage, GlassHelpText } from '../ui/Input.js';
@@ -44,7 +44,7 @@ export const ArrayEditor = ({
   const [expandedItems, setExpandedItems] = useState(new Set());
 
   // Ensure value is always an array
-  const arrayValue = Array.isArray(value) ? value : [];
+  const arrayValue = useMemo(() => Array.isArray(value) ? value : [], [value]);
 
   // Handle adding new item
   const handleAddItem = useCallback(() => {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useAuth } from '../../lib/auth-context.js';
 
@@ -43,9 +44,11 @@ export default function UserMenu({ className = '' }) {
         className="flex items-center gap-3 p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all duration-200"
         type="button"
       >
-        <img
+        <Image
           src={user.avatarUrl || user.avatar_url}
           alt={user.name || user.login}
+          width={32}
+          height={32}
           className="w-8 h-8 rounded-full border border-white/20"
         />
         <div className="text-left hidden sm:block">
@@ -74,9 +77,11 @@ export default function UserMenu({ className = '' }) {
           {/* User Info Header */}
           <div className="p-4 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <img
+              <Image
                 src={user.avatarUrl || user.avatar_url}
                 alt={user.name || user.login}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full border border-white/20"
               />
               <div>

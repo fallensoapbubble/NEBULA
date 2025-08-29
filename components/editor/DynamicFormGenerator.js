@@ -3,7 +3,7 @@
  * Generates forms based on repository structure and portfolio data schema
  */
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { 
   GlassInput, 
   GlassTextarea, 
@@ -48,26 +48,28 @@ export const DynamicFormGenerator = ({
   const [formData, setFormData] = useState(portfolioData);
   const [localErrors, setLocalErrors] = useState({});
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [autoSaveTimer, setAutoSaveTimer] = useState(null);
+  const autoSaveTimerRef = useRef(null);
 
   // Auto-save functionality
   useEffect(() => {
     if (autoSave && hasUnsavedChanges && !isLoading) {
       // Clear existing timer
-      if (autoSaveTimer) {
-        clearTimeout(autoSaveTimer);
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
       }
 
       // Set new timer for auto-save
-      const timer = setTimeout(() => {
+      autoSaveTimerRef.current = setTimeout(() => {
         handleSave();
       }, 2000); // Auto-save after 2 seconds of inactivity
 
-      setAutoSaveTimer(timer);
-
-      return () => clearTimeout(timer);
+      return () => {
+        if (autoSaveTimerRef.current) {
+          clearTimeout(autoSaveTimerRef.current);
+        }
+      };
     }
-  }, [formData, hasUnsavedChanges, autoSave, isLoading]);
+  }, [formData, hasUnsavedChanges, autoSave, isLoading, handleSave]);
 
   // Update form data when portfolio data changes
   useEffect(() => {

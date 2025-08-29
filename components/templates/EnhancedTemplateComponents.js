@@ -689,10 +689,12 @@ function detectAssetType(extension) {
   return 'file';
 }
 
-export default {
+const EnhancedTemplateComponents = {
   GitHubFileRenderer,
   TemplateSpecificRenderer,
   CustomCSSRenderer,
   RepositoryAssetRenderer,
   AdvancedProjectCard
 };
+
+export default EnhancedTemplateComponents;

@@ -2,6 +2,7 @@ import React from 'react';
 import "./globals.css";
 import { AuthProvider } from "../../lib/auth-context.js";
 import { Inter } from 'next/font/google';
+import ClientOnly from "../../components/ClientOnly.js";
 import OfflineStatus from "../../components/ui/OfflineStatus.js";
 import { ServiceWorkerUpdateBanner } from "../../lib/service-worker-manager.js";
 
@@ -16,13 +17,18 @@ export const metadata = {
   title: "Nebula",
   description: "Decentralized Portfolio One Stop",
   manifest: "/manifest.json",
-  themeColor: "#6366f1",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Nebula"
   }
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#6366f1'
 };
 
 export default function RootLayout({ children }) {
@@ -36,11 +42,13 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-title" content="Nebula" />
       </head>
       <body className={inter.className}>
-        <AuthProvider>
-          <ServiceWorkerUpdateBanner />
-          <OfflineStatus />
-          {children}
-        </AuthProvider>
+        <ClientOnly>
+          <AuthProvider>
+            <ServiceWorkerUpdateBanner />
+            <OfflineStatus />
+            {children}
+          </AuthProvider>
+        </ClientOnly>
       </body>
     </html>
   );

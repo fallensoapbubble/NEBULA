@@ -64,17 +64,8 @@ export function useUnsavedChanges(initialData, onSave, options = {}) {
       ]);
     }
 
-    // Schedule auto-save if enabled
-    if (config.enableAutoSave && hasChangesNow) {
-      if (autoSaveTimeoutRef.current) {
-        clearTimeout(autoSaveTimeoutRef.current);
-      }
-      
-      autoSaveTimeoutRef.current = setTimeout(() => {
-        handleSave(true); // Auto-save
-      }, config.autoSaveInterval);
-    }
-  }, [savedData, hasChanges, config.trackHistory, config.maxHistorySize, config.enableAutoSave, config.autoSaveInterval]);
+
+  }, [savedData, hasChanges, config.trackHistory, config.maxHistorySize]);
 
   /**
    * Save changes
@@ -121,6 +112,25 @@ export function useUnsavedChanges(initialData, onSave, options = {}) {
       setIsSaving(false);
     }
   }, [currentData, hasUnsavedChanges, isSaving, onSave, config.trackHistory, config.maxHistorySize]);
+
+  // Auto-save scheduling
+  useEffect(() => {
+    if (config.enableAutoSave && hasUnsavedChanges && !isSaving) {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+      
+      autoSaveTimeoutRef.current = setTimeout(() => {
+        handleSave(true); // Auto-save
+      }, config.autoSaveInterval);
+
+      return () => {
+        if (autoSaveTimeoutRef.current) {
+          clearTimeout(autoSaveTimeoutRef.current);
+        }
+      };
+    }
+  }, [hasUnsavedChanges, isSaving, config.enableAutoSave, config.autoSaveInterval, handleSave]);
 
   /**
    * Discard changes

@@ -98,7 +98,7 @@ export function useRealTimeValidation(portfolioData, options = {}) {
     } finally {
       setIsValidating(false);
     }
-  }, [portfolioData, validateAll, validationOptions.trackHistory]);
+  }, [portfolioData, validateAll, validationOptions.trackHistory, generateSuggestions]);
 
   /**
    * Validate specific field with enhanced feedback
