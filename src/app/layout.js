@@ -5,6 +5,8 @@ import { Inter } from 'next/font/google';
 import ClientOnly from "../../components/ClientOnly.js";
 import OfflineStatus from "../../components/ui/OfflineStatus.js";
 import { ServiceWorkerUpdateBanner } from "../../lib/service-worker-manager.js";
+import ErrorBoundary from "../../components/error/ErrorBoundary.js";
+import DebugInitializer from "../../components/DebugInitializer.js";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,13 +44,16 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-title" content="Nebula" />
       </head>
       <body className={inter.className}>
-        <ClientOnly>
-          <AuthProvider>
-            <ServiceWorkerUpdateBanner />
-            <OfflineStatus />
-            {children}
-          </AuthProvider>
-        </ClientOnly>
+        <ErrorBoundary>
+          <ClientOnly>
+            <DebugInitializer />
+            <AuthProvider>
+              <ServiceWorkerUpdateBanner />
+              <OfflineStatus />
+              {children}
+            </AuthProvider>
+          </ClientOnly>
+        </ErrorBoundary>
       </body>
     </html>
   );

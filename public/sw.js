@@ -353,7 +353,10 @@ self.addEventListener('message', (event) => {
       
     case 'GET_CACHE_STATUS':
       event.waitUntil(getCacheStatus().then(status => {
-        event.ports[0].postMessage(status);
+        // Check if port exists before trying to post message
+        if (event.ports && event.ports[0]) {
+          event.ports[0].postMessage(status);
+        }
       }));
       break;
   }

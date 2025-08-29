@@ -13,11 +13,15 @@ export default function Home() {
   const handleGetStarted = () => {
     setIsLoading(true);
     // Redirect to GitHub OAuth
-    window.location.href = '/api/auth/github';
+    if (typeof window !== 'undefined') {
+      window.location.href = '/api/auth/github';
+    }
   };
 
   const handleViewTemplates = () => {
-    window.location.href = '/templates';
+    if (typeof window !== 'undefined') {
+      window.location.href = '/templates';
+    }
   };
 
   const features = [
