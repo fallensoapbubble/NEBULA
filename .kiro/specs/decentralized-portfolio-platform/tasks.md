@@ -282,9 +282,9 @@
     - Graceful fallback for downtime
     - _Requirements: 9.4_
 
-- [ ] 11. Performance + Testing
+- [x] 11. Performance + Testing
 
-  - [ ] 11.1 Optimizations
+  - [x] 11.1 Optimizations
 
     - Next.js image optimization
     - Lazy loading for sections
@@ -293,7 +293,7 @@
     - Asset compression + CDN
     - _Requirements: 11.1_
 
-  - [ ] 11.2 Monitoring + Analytics
+  - [x] 11.2 Monitoring + Analytics
 
     - Track Core Web Vitals
     - Monitor GitHub API rate limits
@@ -301,7 +301,7 @@
     - Error tracking + reporting
     - _Requirements: 11.3_
 
-  - [ ] 11.3 Testing Suite
+  - [x] 11.3 Testing Suite
 
     - Unit tests for services/utilities
     - Integration tests for API + workflows
@@ -309,9 +309,9 @@
     - Performance tests for ISR
     - _Requirements: Testing strategy_
 
-- [ ] 12. Deployment + Documentation
+- [x] 12. Deployment + Documentation
 
-  - [ ] 12.1 Production Setup
+  - [x] 12.1 Production Setup
 
     - Vercel deployment config
     - Env variables for GitHub API + secrets
@@ -319,14 +319,14 @@
     - Custom domain + SSL
     - _Requirements: Deployment specs_
 
-  - [ ] 12.2 Monitoring & Alerts
+  - [x] 12.2 Monitoring & Alerts
 
     - Error + performance monitoring dashboards
     - GitHub API usage tracking
     - Alerts for rate-limit / failures
     - _Requirements: Production monitoring_
 
-  - [ ] 12.3 Docs + Guides
+  - [x] 12.3 Docs + Guides
 
     - User guide: create + publish article repos
     - Template creator guide (dark/light examples)

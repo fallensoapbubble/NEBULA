@@ -4,8 +4,8 @@
  */
 
 import { NextResponse } from 'next/server';
-import { ErrorHandler } from '../../../../lib/errors.js';
-import { createLogger } from '../../../../lib/logger.js';
+import { ErrorHandler } from '@/lib/errors.js';
+import { createLogger } from '@/lib/logger.js';
 
 const errorReportLogger = createLogger('ErrorReports');
 

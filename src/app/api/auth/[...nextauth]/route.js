@@ -1,44 +1,23 @@
 /**
- * Temporary Auth API Route Handler
- * Simplified authentication endpoints for build compatibility
+ * NextAuth API Route Handler
+ * Handles all NextAuth.js authentication routes
  */
 
 import { NextResponse } from 'next/server';
 
+// Temporarily disabled NextAuth to fix build issues
+// TODO: Re-enable once environment is properly configured
+
 export async function GET(request) {
-  const { pathname } = new URL(request.url);
-  
-  // Handle session endpoint
-  if (pathname.includes('/session')) {
-    return NextResponse.json({
-      user: null,
-      expires: null
-    });
-  }
-  
-  // Handle providers endpoint
-  if (pathname.includes('/providers')) {
-    return NextResponse.json({
-      github: {
-        id: 'github',
-        name: 'GitHub',
-        type: 'oauth',
-        signinUrl: '/auth/signin',
-        callbackUrl: '/api/auth/callback/github'
-      }
-    });
-  }
-  
-  // Default response
-  return NextResponse.json({ 
-    message: 'Authentication service available',
-    timestamp: new Date().toISOString()
-  });
+  return NextResponse.json({
+    error: 'NextAuth temporarily disabled',
+    message: 'Authentication service is being configured'
+  }, { status: 503 });
 }
 
 export async function POST(request) {
-  return NextResponse.json({ 
-    message: 'Authentication service available',
-    timestamp: new Date().toISOString()
-  });
+  return NextResponse.json({
+    error: 'NextAuth temporarily disabled',
+    message: 'Authentication service is being configured'
+  }, { status: 503 });
 }

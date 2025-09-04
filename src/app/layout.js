@@ -7,6 +7,7 @@ import OfflineStatus from "../../components/ui/OfflineStatus.js";
 import { ServiceWorkerUpdateBanner } from "../../lib/service-worker-manager.js";
 import ErrorBoundary from "../../components/error/ErrorBoundary.js";
 import DebugInitializer from "../../components/DebugInitializer.js";
+import PerformanceMonitor from "../../components/PerformanceMonitor.js";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -47,6 +48,7 @@ export default function RootLayout({ children }) {
         <ErrorBoundary>
           <ClientOnly>
             <DebugInitializer />
+            <PerformanceMonitor />
             <AuthProvider>
               <ServiceWorkerUpdateBanner />
               <OfflineStatus />
