@@ -45,7 +45,7 @@ function SignInContent() {
       }
     } catch (err) {
       console.error('Sign in error:', err);
-      setError('An unexpected error occurred. Please try again.');
+      setError(err);
     } finally {
       setIsLoading(false);
     }
