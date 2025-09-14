@@ -83,7 +83,7 @@ export async function GET(request) {
 async function exchangeCodeForToken(code) {
   const clientId = process.env.GITHUB_CLIENT_ID;
   const clientSecret = process.env.GITHUB_CLIENT_SECRET;
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://nebulaus.netlify.app/';
   
   if (!clientId || !clientSecret) {
     throw new Error('GitHub OAuth credentials not configured');
