@@ -493,7 +493,7 @@ function TemplateDetailModal({ template, isAuthenticated, user, onClose, onCreat
       onClick={onClose}
     >
       <motion.div
-        className="glass-modal max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="glass-modal max-w-4xl w-full max-h-[90vh] overflow-y-auto"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
