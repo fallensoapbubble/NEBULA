@@ -1,33 +1,53 @@
+/**
+ * Logout API Route
+ * Handles user logout by clearing session cookies
+ */
+
 import { NextResponse } from 'next/server';
 
 /**
- * Logout endpoint
- * Note: With NextAuth, logout should be handled client-side using signOut()
- * This endpoint is kept for backward compatibility
+ * POST /api/auth/logout
+ * Clear authentication session
  */
 export async function POST(request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const redirectTo = searchParams.get('redirect') || '/';
+    const response = NextResponse.json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+
+    // Clear all GitHub session cookies
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0, // Expire immediately
+      path: '/'
+    };
+
+    response.cookies.set('github_session_id', '', cookieOptions);
+    response.cookies.set('github_username', '', cookieOptions);
+    response.cookies.set('github_access_token', '', cookieOptions);
+    response.cookies.set('github_refresh_token', '', cookieOptions);
+    response.cookies.set('github_token_expiry', '', cookieOptions);
+    response.cookies.set('github_permissions', '', cookieOptions);
     
-    // For NextAuth, we redirect to the signout endpoint
-    const signOutUrl = new URL('/api/auth/signout', request.url);
-    signOutUrl.searchParams.set('callbackUrl', redirectTo);
-    
-    return NextResponse.redirect(signOutUrl);
-    
+    // Clear user data cookie (not httpOnly)
+    response.cookies.set('github_user_data', '', {
+      ...cookieOptions,
+      httpOnly: false
+    });
+
+    return response;
+
   } catch (error) {
-    console.error('Logout error:', error);
+    console.error('Logout API error:', error);
     return NextResponse.json(
-      { error: 'Logout failed' },
+      {
+        success: false,
+        error: 'Failed to logout'
+      },
       { status: 500 }
     );
   }
-}
-
-/**
- * GET method for logout (for simple link-based logout)
- */
-export async function GET(request) {
-  return POST(request);
 }

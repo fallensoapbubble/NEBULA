@@ -14,9 +14,19 @@ import { Octokit } from '@octokit/rest';
  */
 export async function POST(request) {
   try {
-    // Get GitHub token from request headers (simplified auth)
-    const authHeader = request.headers.get('authorization');
-    const githubToken = authHeader?.replace('Bearer ', '') || process.env.GITHUB_TOKEN;
+    // Get GitHub token from cookies or headers
+    let githubToken = request.cookies.get('github_access_token')?.value;
+    
+    // Fallback to Authorization header for API compatibility
+    if (!githubToken) {
+      const authHeader = request.headers.get('authorization');
+      githubToken = authHeader?.replace('Bearer ', '');
+    }
+    
+    // Final fallback to environment token for development
+    if (!githubToken) {
+      githubToken = process.env.GITHUB_TOKEN;
+    }
     
     if (!githubToken) {
       return NextResponse.json(
@@ -278,9 +288,19 @@ export async function POST(request) {
  */
 export async function GET(request) {
   try {
-    // Get GitHub token from request headers (simplified auth)
-    const authHeader = request.headers.get('authorization');
-    const githubToken = authHeader?.replace('Bearer ', '') || process.env.GITHUB_TOKEN;
+    // Get GitHub token from cookies or headers
+    let githubToken = request.cookies.get('github_access_token')?.value;
+    
+    // Fallback to Authorization header for API compatibility
+    if (!githubToken) {
+      const authHeader = request.headers.get('authorization');
+      githubToken = authHeader?.replace('Bearer ', '');
+    }
+    
+    // Final fallback to environment token for development
+    if (!githubToken) {
+      githubToken = process.env.GITHUB_TOKEN;
+    }
     
     if (!githubToken) {
       return NextResponse.json(

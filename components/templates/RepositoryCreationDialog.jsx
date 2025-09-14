@@ -99,8 +99,8 @@ export default function RepositoryCreationDialog({
 
       const validateResponse = await fetch(`/api/repositories/fork?templateId=${encodeURIComponent(template.id)}&repositoryName=${encodeURIComponent(formData.repositoryName)}`, {
         method: 'GET',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${user?.accessToken || 'demo-token'}`,
           'Content-Type': 'application/json'
         }
       });
@@ -121,8 +121,8 @@ export default function RepositoryCreationDialog({
 
       const forkResponse = await fetch('/api/repositories/fork', {
         method: 'POST',
+        credentials: 'include',
         headers: {
-          'Authorization': `Bearer ${user?.accessToken || 'demo-token'}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

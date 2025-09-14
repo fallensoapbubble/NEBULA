@@ -5,34 +5,34 @@
 
 import { NextResponse } from 'next/server';
 
-// Mock template data for development
+// Template data with real GitHub repositories that can be forked
 const MOCK_TEMPLATES = [
   {
-    id: 'portfolio-templates/minimal-portfolio',
-    name: 'Minimal Portfolio',
-    description: 'A clean, minimal portfolio template perfect for developers and designers. Features a modern glassmorphic design with smooth animations.',
+    id: 'vercel/next.js',
+    name: 'Next.js Starter',
+    description: 'The official Next.js starter template. A React framework for production with server-side rendering, static site generation, and more.',
     repository: {
-      owner: 'portfolio-templates',
-      name: 'minimal-portfolio',
-      full_name: 'portfolio-templates/minimal-portfolio',
-      url: 'https://github.com/portfolio-templates/minimal-portfolio',
-      clone_url: 'https://github.com/portfolio-templates/minimal-portfolio.git',
+      owner: 'vercel',
+      name: 'next.js',
+      full_name: 'vercel/next.js',
+      url: 'https://github.com/vercel/next.js',
+      clone_url: 'https://github.com/vercel/next.js.git',
       private: false
     },
-    preview_url: '/api/placeholder/600/400?text=Minimal+Portfolio',
-    tags: ['minimal', 'developer', 'glassmorphic', 'dark-mode'],
+    preview_url: '/api/placeholder/600/400?text=Next.js+Starter',
+    tags: ['react', 'nextjs', 'starter', 'framework'],
     structure: {
-      content_files: ['data.json', 'content/about.md'],
-      config_files: ['.nebula/config.json', 'package.json'],
-      required_fields: ['name', 'title', 'about', 'projects']
+      content_files: ['package.json', 'README.md'],
+      config_files: ['next.config.js', 'package.json'],
+      required_fields: ['name', 'description']
     },
     metadata: {
       version: '1.0.0',
-      author: 'portfolio-templates',
+      author: 'vercel',
       created_at: new Date('2024-01-15'),
       updated_at: new Date('2024-02-20'),
-      stars: 245,
-      forks: 67
+      stars: 125000,
+      forks: 26800
     },
     validation: {
       isValid: true,
@@ -41,64 +41,64 @@ const MOCK_TEMPLATES = [
     }
   },
   {
-    id: 'portfolio-templates/creative-portfolio',
-    name: 'Creative Portfolio',
-    description: 'A vibrant, creative portfolio template with bold animations and interactive elements. Perfect for artists, designers, and creative professionals.',
+    id: 'facebook/create-react-app',
+    name: 'React App Template',
+    description: 'Create React apps with no build configuration. The official template for creating React applications with modern tooling.',
     repository: {
-      owner: 'portfolio-templates',
-      name: 'creative-portfolio',
-      full_name: 'portfolio-templates/creative-portfolio',
-      url: 'https://github.com/portfolio-templates/creative-portfolio',
-      clone_url: 'https://github.com/portfolio-templates/creative-portfolio.git',
+      owner: 'facebook',
+      name: 'create-react-app',
+      full_name: 'facebook/create-react-app',
+      url: 'https://github.com/facebook/create-react-app',
+      clone_url: 'https://github.com/facebook/create-react-app.git',
       private: false
     },
-    preview_url: '/api/placeholder/600/400?text=Creative+Portfolio',
-    tags: ['creative', 'artist', 'colorful', 'interactive'],
+    preview_url: '/api/placeholder/600/400?text=React+App',
+    tags: ['react', 'javascript', 'spa', 'frontend'],
     structure: {
-      content_files: ['data.json', 'content/gallery.json'],
-      config_files: ['.nebula/config.json', 'package.json'],
-      required_fields: ['name', 'bio', 'gallery', 'contact']
+      content_files: ['package.json', 'public/index.html', 'src/App.js'],
+      config_files: ['package.json'],
+      required_fields: ['name', 'version']
     },
     metadata: {
       version: '1.2.0',
-      author: 'portfolio-templates',
+      author: 'facebook',
       created_at: new Date('2024-01-10'),
       updated_at: new Date('2024-02-25'),
-      stars: 189,
-      forks: 43
+      stars: 102000,
+      forks: 26500
     },
     validation: {
       isValid: true,
       errors: [],
-      warnings: ['Missing preview.png in .nebula directory']
+      warnings: []
     }
   },
   {
-    id: 'portfolio-templates/developer-portfolio',
-    name: 'Developer Portfolio',
-    description: 'A technical portfolio template designed for software developers. Includes sections for projects, skills, experience, and a blog.',
+    id: 'vitejs/vite',
+    name: 'Vite Template',
+    description: 'Next generation frontend tooling. A fast build tool that provides instant server start and lightning fast HMR.',
     repository: {
-      owner: 'portfolio-templates',
-      name: 'developer-portfolio',
-      full_name: 'portfolio-templates/developer-portfolio',
-      url: 'https://github.com/portfolio-templates/developer-portfolio',
-      clone_url: 'https://github.com/portfolio-templates/developer-portfolio.git',
+      owner: 'vitejs',
+      name: 'vite',
+      full_name: 'vitejs/vite',
+      url: 'https://github.com/vitejs/vite',
+      clone_url: 'https://github.com/vitejs/vite.git',
       private: false
     },
-    preview_url: '/api/placeholder/600/400?text=Developer+Portfolio',
-    tags: ['developer', 'technical', 'blog', 'projects'],
+    preview_url: '/api/placeholder/600/400?text=Vite+Template',
+    tags: ['vite', 'build-tool', 'frontend', 'fast'],
     structure: {
-      content_files: ['data.json', 'content/projects.json', 'content/blog/*.md'],
-      config_files: ['.nebula/config.json', 'package.json'],
-      required_fields: ['name', 'title', 'skills', 'projects', 'experience']
+      content_files: ['package.json', 'index.html'],
+      config_files: ['vite.config.js', 'package.json'],
+      required_fields: ['name', 'version']
     },
     metadata: {
       version: '2.0.0',
-      author: 'portfolio-templates',
+      author: 'vitejs',
       created_at: new Date('2023-12-20'),
       updated_at: new Date('2024-02-28'),
-      stars: 412,
-      forks: 128
+      stars: 67000,
+      forks: 6000
     },
     validation: {
       isValid: true,
@@ -107,31 +107,31 @@ const MOCK_TEMPLATES = [
     }
   },
   {
-    id: 'portfolio-templates/business-portfolio',
-    name: 'Business Portfolio',
-    description: 'A professional business portfolio template with a corporate design. Ideal for consultants, agencies, and business professionals.',
+    id: 'tailwindlabs/tailwindcss',
+    name: 'Tailwind CSS',
+    description: 'A utility-first CSS framework for rapidly building custom user interfaces. Perfect for modern web development.',
     repository: {
-      owner: 'portfolio-templates',
-      name: 'business-portfolio',
-      full_name: 'portfolio-templates/business-portfolio',
-      url: 'https://github.com/portfolio-templates/business-portfolio',
-      clone_url: 'https://github.com/portfolio-templates/business-portfolio.git',
+      owner: 'tailwindlabs',
+      name: 'tailwindcss',
+      full_name: 'tailwindlabs/tailwindcss',
+      url: 'https://github.com/tailwindlabs/tailwindcss',
+      clone_url: 'https://github.com/tailwindlabs/tailwindcss.git',
       private: false
     },
-    preview_url: '/api/placeholder/600/400?text=Business+Portfolio',
-    tags: ['business', 'professional', 'corporate', 'services'],
+    preview_url: '/api/placeholder/600/400?text=Tailwind+CSS',
+    tags: ['css', 'utility-first', 'styling', 'framework'],
     structure: {
-      content_files: ['data.json', 'content/services.json', 'content/testimonials.json'],
-      config_files: ['.nebula/config.json', 'package.json'],
-      required_fields: ['company', 'services', 'testimonials', 'contact']
+      content_files: ['package.json', 'tailwind.config.js'],
+      config_files: ['tailwind.config.js', 'package.json'],
+      required_fields: ['name', 'version']
     },
     metadata: {
       version: '1.1.0',
-      author: 'portfolio-templates',
+      author: 'tailwindlabs',
       created_at: new Date('2024-01-05'),
       updated_at: new Date('2024-02-15'),
-      stars: 156,
-      forks: 34
+      stars: 82000,
+      forks: 4100
     },
     validation: {
       isValid: true,
@@ -140,31 +140,31 @@ const MOCK_TEMPLATES = [
     }
   },
   {
-    id: 'portfolio-templates/photography-portfolio',
-    name: 'Photography Portfolio',
-    description: 'A stunning photography portfolio template with full-screen galleries and elegant image presentations. Perfect for photographers and visual artists.',
+    id: 'microsoft/vscode',
+    name: 'VS Code Template',
+    description: 'Visual Studio Code source code repository. A powerful, lightweight code editor with rich ecosystem of extensions.',
     repository: {
-      owner: 'portfolio-templates',
-      name: 'photography-portfolio',
-      full_name: 'portfolio-templates/photography-portfolio',
-      url: 'https://github.com/portfolio-templates/photography-portfolio',
-      clone_url: 'https://github.com/portfolio-templates/photography-portfolio.git',
+      owner: 'microsoft',
+      name: 'vscode',
+      full_name: 'microsoft/vscode',
+      url: 'https://github.com/microsoft/vscode',
+      clone_url: 'https://github.com/microsoft/vscode.git',
       private: false
     },
-    preview_url: '/api/placeholder/600/400?text=Photography+Portfolio',
-    tags: ['photography', 'gallery', 'visual', 'fullscreen'],
+    preview_url: '/api/placeholder/600/400?text=VS+Code',
+    tags: ['editor', 'typescript', 'electron', 'development'],
     structure: {
-      content_files: ['data.json', 'content/galleries.json'],
-      config_files: ['.nebula/config.json', 'package.json'],
-      required_fields: ['name', 'bio', 'galleries', 'contact']
+      content_files: ['package.json', 'src/main.ts'],
+      config_files: ['package.json', 'tsconfig.json'],
+      required_fields: ['name', 'version']
     },
     metadata: {
       version: '1.0.0',
-      author: 'portfolio-templates',
+      author: 'microsoft',
       created_at: new Date('2024-02-01'),
       updated_at: new Date('2024-02-22'),
-      stars: 98,
-      forks: 21
+      stars: 163000,
+      forks: 28800
     },
     validation: {
       isValid: true,
@@ -173,31 +173,31 @@ const MOCK_TEMPLATES = [
     }
   },
   {
-    id: 'portfolio-templates/blog-portfolio',
-    name: 'Blog Portfolio',
-    description: 'A content-focused portfolio template with integrated blogging capabilities. Great for writers, content creators, and thought leaders.',
+    id: 'nodejs/node',
+    name: 'Node.js Template',
+    description: 'Node.js JavaScript runtime built on Chrome\'s V8 JavaScript engine. Perfect for building scalable network applications.',
     repository: {
-      owner: 'portfolio-templates',
-      name: 'blog-portfolio',
-      full_name: 'portfolio-templates/blog-portfolio',
-      url: 'https://github.com/portfolio-templates/blog-portfolio',
-      clone_url: 'https://github.com/portfolio-templates/blog-portfolio.git',
+      owner: 'nodejs',
+      name: 'node',
+      full_name: 'nodejs/node',
+      url: 'https://github.com/nodejs/node',
+      clone_url: 'https://github.com/nodejs/node.git',
       private: false
     },
-    preview_url: '/api/placeholder/600/400?text=Blog+Portfolio',
-    tags: ['blog', 'content', 'writing', 'articles'],
+    preview_url: '/api/placeholder/600/400?text=Node.js',
+    tags: ['nodejs', 'javascript', 'runtime', 'backend'],
     structure: {
-      content_files: ['data.json', 'content/posts/*.md', 'content/about.md'],
-      config_files: ['.nebula/config.json', 'package.json'],
-      required_fields: ['name', 'bio', 'posts', 'categories']
+      content_files: ['package.json', 'lib/index.js'],
+      config_files: ['package.json'],
+      required_fields: ['name', 'version']
     },
     metadata: {
       version: '1.3.0',
-      author: 'portfolio-templates',
+      author: 'nodejs',
       created_at: new Date('2023-11-15'),
       updated_at: new Date('2024-02-18'),
-      stars: 267,
-      forks: 89
+      stars: 107000,
+      forks: 29200
     },
     validation: {
       isValid: true,
