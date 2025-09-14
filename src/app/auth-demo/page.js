@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { 
   AuthGuard, 
   AuthStatus, 
   LoginButton, 
   UserMenu, 
-  AuthErrorBoundary,
   useAuth,
   usePermissions,
   useGitHubAPI
@@ -19,8 +19,7 @@ import AuthTest from '../../../components/auth/AuthTest.js';
  */
 export default function AuthDemoPage() {
   return (
-    <AuthErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         {/* Header */}
         <header className="border-b border-white/10 bg-white/5 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -142,7 +141,6 @@ export default function AuthDemoPage() {
         {/* Development Test Panel */}
         <AuthTest />
       </div>
-    </AuthErrorBoundary>
   );
 }
 
@@ -159,9 +157,11 @@ function UserProfileCard() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3">
-        <img
+        <Image
           src={user.avatarUrl || user.avatar_url}
           alt={user.name || user.login}
+          width={48}
+          height={48}
           className="w-12 h-12 rounded-full border border-white/20"
         />
         <div>

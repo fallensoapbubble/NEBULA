@@ -5,7 +5,6 @@ import { Inter } from 'next/font/google';
 import ClientOnly from "../../components/ClientOnly.js";
 import OfflineStatus from "../../components/ui/OfflineStatus.js";
 import { ServiceWorkerUpdateBanner } from "../../lib/service-worker-manager.js";
-import ErrorBoundary from "../../components/error/ErrorBoundary.js";
 import DebugInitializer from "../../components/DebugInitializer.js";
 import PerformanceMonitor from "../../components/PerformanceMonitor.js";
 
@@ -45,17 +44,15 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-title" content="Nebula" />
       </head>
       <body className={inter.className}>
-        <ErrorBoundary>
-          <ClientOnly>
-            <DebugInitializer />
-            <PerformanceMonitor />
-            <AuthProvider>
-              <ServiceWorkerUpdateBanner />
-              <OfflineStatus />
-              {children}
-            </AuthProvider>
-          </ClientOnly>
-        </ErrorBoundary>
+        <ClientOnly>
+          <DebugInitializer />
+          <PerformanceMonitor />
+          <AuthProvider>
+            <ServiceWorkerUpdateBanner />
+            <OfflineStatus />
+            {children}
+          </AuthProvider>
+        </ClientOnly>
       </body>
     </html>
   );

@@ -6,6 +6,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -401,11 +402,12 @@ function TemplateCard({ template, onSelect, isAuthenticated }) {
       onClick={() => onSelect(template)}
     >
       {/* Template Preview */}
-      <div className="aspect-video bg-gray-800 overflow-hidden rounded-t-xl">
-        <img
+      <div className="aspect-video bg-gray-800 overflow-hidden rounded-t-xl relative">
+        <Image
           src={template.preview_url}
           alt={`${template.name} preview`}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
           onError={(e) => {
             e.target.style.display = 'none';
             e.target.nextSibling.style.display = 'flex';
@@ -522,11 +524,12 @@ function TemplateDetailModal({ template, isAuthenticated, user, onClose, onCreat
         {/* Modal Content */}
         <div className="p-6 space-y-6">
           {/* Template Preview */}
-          <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
-            <img
+          <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden relative">
+            <Image
               src={template.preview_url}
               alt={`${template.name} preview`}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
 

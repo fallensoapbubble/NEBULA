@@ -106,72 +106,19 @@ export const TemplateRenderer = ({
           repository={repositoryInfo}
           template={template}
         >
-          <TemplateErrorBoundary onError={handleRenderError}>
-            <TemplateComponent
-              template={template}
-              portfolioData={portfolioData}
-              repositoryInfo={repositoryInfo}
-              isPreview={isPreview}
-            />
-          </TemplateErrorBoundary>
+          <TemplateComponent
+            template={template}
+            portfolioData={portfolioData}
+            repositoryInfo={repositoryInfo}
+            isPreview={isPreview}
+          />
         </PortfolioDataProvider>
       </TemplateStyleProvider>
     </div>
   );
 };
 
-/**
- * TemplateErrorBoundary - Error boundary for template rendering
- */
-class TemplateErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    logger.error('Template rendering error caught by boundary', {
-      error: error.message,
-      errorInfo
-    });
-    
-    if (this.props.onError) {
-      this.props.onError(error);
-    }
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <GlassCard className="p-8 text-center border-red-500/20">
-          <GlassCardContent>
-            <div className="text-red-400 mb-4">
-              <svg className="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold text-text-1 mb-2">Template Rendering Error</h3>
-            <p className="text-text-2 mb-4">
-              There was an error rendering this portfolio template.
-            </p>
-            <button 
-              className="glass-button glass-button-primary"
-              onClick={() => this.setState({ hasError: false, error: null })}
-            >
-              Try Again
-            </button>
-          </GlassCardContent>
-        </GlassCard>
-      );
-    }
-
-    return this.props.children;
-  }
-}
 
 /**
  * TemplatePreview - Lightweight preview version of template renderer

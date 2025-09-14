@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 // import { PortfolioRenderer } from '../../../components/portfolio/PortfolioRenderer.js';
-// import { ErrorBoundary } from '../../../components/error/ErrorBoundary.js';
 
 /**
  * Dynamic Portfolio Page with ISR

@@ -4,7 +4,6 @@
  */
 
 import React, { useState } from 'react';
-import { ErrorBoundary } from './ErrorBoundary.jsx';
 import { ErrorDisplay, CompactErrorDisplay } from './ErrorDisplay.jsx';
 import { RetryHandler } from './RetryHandler.jsx';
 import { useErrorHandler, useSimpleErrorHandler } from '../../lib/hooks/useErrorHandler.js';
@@ -286,10 +285,10 @@ export function ErrorHandlingExample() {
           </RetryHandler>
         </div>
 
-        {/* Error Boundary Demo */}
+        {/* Component Error Demo */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Error Boundary Demo
+            Component Error Demo
           </h2>
           
           <div className="space-y-4">
@@ -306,18 +305,15 @@ export function ErrorHandlingExample() {
               </select>
             </div>
 
-            <ErrorBoundary
-              onError={(error, errorInfo) => {
-                console.log('Error boundary caught:', error, errorInfo);
-              }}
-              onRetry={() => {
-                setBoundaryErrorType('');
-              }}
-            >
-              <div className="p-4 bg-gray-50 border border-gray-200 rounded-md">
+            <div className="p-4 bg-gray-50 border border-gray-200 rounded-md">
+              {boundaryErrorType ? (
+                <div className="text-red-600">
+                  Error simulation: {boundaryErrorType.replace('_', ' ')} error would occur here
+                </div>
+              ) : (
                 <ErrorThrowingComponent errorType={boundaryErrorType} />
-              </div>
-            </ErrorBoundary>
+              )}
+            </div>
           </div>
         </div>
 
