@@ -221,7 +221,7 @@ function clearOAuthCookies(response) {
 function redirectWithError(message) {
   const errorUrl = new URL(
     "/auth/error",
-    process.env.NEXTAUTH_URL || "http://localhost:3000"
+    process.env.NEXTAUTH_URL || "https://nebulaus.netlify.app"
   );
   errorUrl.searchParams.set("error", message);
   return NextResponse.redirect(errorUrl);
