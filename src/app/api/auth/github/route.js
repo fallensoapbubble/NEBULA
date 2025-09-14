@@ -11,7 +11,7 @@ export async function GET(request) {
 
     // Validate environment variables
     const clientId = process.env.GITHUB_CLIENT_ID;
-    const baseUrl = process.env.NEXTAUTH_URL || "https://nebulaus.netlify.app/";
+    const baseUrl = process.env.NEXTAUTH_URL || "https://nebulaus.netlify.app";
     const scopes = process.env.GITHUB_OAUTH_SCOPES || "public_repo,repo";
 
     if (!clientId) {
